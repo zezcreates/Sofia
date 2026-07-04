@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sofia's Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFCF5;
+  --surface: #FFFFFF;
+  --ink: #2B2B2B;
+  --ink-soft: #7A7266;
+  --border: #EDE7D8;
+  --correct: #3FAA6D;
+  --incorrect: #F0594A;
+  --amber: #F2A93B;
+  --accent: #E85D8A;
+  --radius: 20px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px 48px;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+}
+
+h1, h2 {
+  font-family: 'Baloo 2', sans-serif;
+  margin: 0 0 8px;
+}
+
+/* ---------- Landing ---------- */
+.landing {
+  text-align: center;
+  padding-top: 40px;
+}
+
+.kid-name {
+  font-size: 2.2rem;
+  color: var(--accent);
+}
+
+.landing-sub {
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+}
+
+.landing-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.choice-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  font-size: 1.1rem;
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.choice-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.choice-emoji { font-size: 1.8rem; }
+
+/* ---------- Progress strip ---------- */
+.progress-strip {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+/* ---------- Card flip ---------- */
+.card-scene {
+  perspective: 1200px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: var(--surface);
+  border: 3px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: 0 6px 0 var(--border);
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-tag {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-question {
+  font-size: 1.3rem;
+  margin: 16px 0 24px;
+  line-height: 1.4;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-btn {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.choice-btn.correct-choice {
+  border-color: var(--correct);
+  background: #EAF7EF;
+}
+
+.choice-btn.incorrect-choice {
+  border-color: var(--incorrect);
+  background: #FDEDEB;
+}
+
+.result {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.3rem;
+}
+
+.result.correct { color: var(--correct); }
+.result.incorrect { color: var(--incorrect); }
+
+.lesson {
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.research-flag {
+  background: #FEF6E9;
+  border: 2px dashed var(--amber);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.research-flag-title {
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+
+.research-flag-topic {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.research-flag-note {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.next-btn, .primary-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 1rem;
+  font-family: 'Baloo 2', sans-serif;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.secondary-btn {
+  background: var(--surface);
+  color: var(--ink-soft);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+}
+
+/* ---------- Research prompt ---------- */
+.research-prompt {
+  text-align: center;
+  padding-top: 40px;
+}
+
+.research-prompt textarea {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  padding: 16px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  margin: 20px 0;
+  resize: vertical;
+}
+
+.research-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.research-actions button { flex: 1; }
+
+/* ---------- Done ---------- */
+.done-screen {
+  text-align: center;
+  padding-top: 60px;
+}
+
+.done-emoji { font-size: 3rem; }
+
+/* ---------- Loading / error ---------- */
+.loading, .error {
+  text-align: center;
+  padding-top: 80px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .card, .choice-card { transition: none; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ===================================================================
+// CONFIG — set after deploying the Apps Script web app
+// window.KID is set by each kid's index.html before this file loads
+// ===================================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7Dx6jwkc6vPim8x3U-uqzjBu9nFMqf8DBYPSKT-nfm5iWBmMEYJ-QFF2Jf4cD3cfz/exec';
+const KID = 'sofia';
+
+const state = {
+  queue: [],       // combined missed + fresh questions, in order
+  current: null,
+  answered: 0,
+  missedCount: 0,
+  masteredCount: 0
+};
+
+const root = document.getElementById('app');
+
+// ---------- API helpers ----------
+async function apiGet(action) {
+  const url = `${APPS_SCRIPT_URL}?action=${action}&kid=${KID}`;
+  const res = await fetch(url);
+  return res.json();
+}
+
+async function apiPost(action, body) {
+  const url = `${APPS_SCRIPT_URL}?action=${action}&kid=${KID}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ---------- Landing screen ----------
+function renderLanding() {
+  root.innerHTML = `
+    <div class="landing">
+      <h1 class="kid-name">Hey ${capitalize(KID)}!</h1>
+      <p class="landing-sub">What do you want to do?</p>
+      <div class="landing-choices">
+        <button class="choice-card" id="btn-practice">
+          <span class="choice-emoji">🧠</span>
+          <span class="choice-label">Practice Session</span>
+        </button>
+        <button class="choice-card" id="btn-research">
+          <span class="choice-emoji">🔍</span>
+          <span class="choice-label">Research Note</span>
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-practice').onclick = startPracticeSession;
+  document.getElementById('btn-research').onclick = () => renderResearchPrompt(true);
+}
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// ---------- Practice session ----------
+async function startPracticeSession() {
+  renderLoading('Getting your questions ready...');
+  const session = await apiGet('startSession');
+  if (session.error) return renderError(session.error);
+
+  state.queue = [...session.missed, ...session.fresh];
+  state.answered = 0;
+  state.missedCount = 0;
+  state.masteredCount = 0;
+
+  if (state.queue.length === 0) {
+    return renderDone();
+  }
+  nextQuestion();
+}
+
+function nextQuestion() {
+  if (state.queue.length === 0) {
+    return renderResearchPrompt(false);
+  }
+  state.current = state.queue.shift();
+  renderQuestion(state.current);
+}
+
+function renderLoading(msg) {
+  root.innerHTML = `<div class="loading">${msg}</div>`;
+}
+
+function renderError(msg) {
+  root.innerHTML = `<div class="error">Something went wrong: ${msg}</div>`;
+}
+
+// ---------- Question card ----------
+function renderQuestion(q) {
+  const choices = shuffle([q.answer, q.wrong_answer_1, q.wrong_answer_2].filter(Boolean));
+
+  root.innerHTML = `
+    <div class="progress-strip">
+      <span>${state.queue.length + 1} left this session</span>
+    </div>
+    <div class="card-scene">
+      <div class="card" id="flip-card">
+        <div class="card-face card-front">
+          <div class="card-tag">${q.subject || ''} · Grade ${q.grade}</div>
+          <div class="card-question">${q.question}</div>
+          <div class="choices">
+            ${choices.map((c, i) => `<button class="choice-btn" data-choice="${escapeAttr(c)}">${c}</button>`).join('')}
+          </div>
+        </div>
+        <div class="card-face card-back" id="card-back"></div>
+      </div>
+    </div>
+  `;
+
+  root.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.onclick = () => handleAnswer(q, btn.dataset.choice, choices);
+  });
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/"/g, '&quot;');
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ---------- Handle answer ----------
+async function handleAnswer(q, chosen, choices) {
+  const correct = chosen.trim() === String(q.answer).trim();
+
+  root.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.choice === String(q.answer)) btn.classList.add('correct-choice');
+    else if (btn.dataset.choice === chosen && !correct) btn.classList.add('incorrect-choice');
+  });
+
+  await apiPost('submitAnswer', { question_id: q.question_id, correct });
+
+  if (!correct) state.missedCount++;
+
+  // Flip the card to reveal lesson / research flag
+  setTimeout(() => {
+    const back = document.getElementById('card-back');
+    back.innerHTML = renderCardBack(q, correct);
+    document.getElementById('flip-card').classList.add('flipped');
+
+    if (q.research_required === 'Y' && q.research_topic) {
+      apiPost('addResearch', {
+        source: 'lesson_flag',
+        topic: q.research_topic,
+        question_id: q.question_id
+      });
+    }
+
+    document.getElementById('next-btn').onclick = nextQuestion;
+  }, 700);
+}
+
+function renderCardBack(q, correct) {
+  const resultLabel = correct
+    ? `<div class="result correct">Nice! ✅</div>`
+    : `<div class="result incorrect">Not quite ❌</div>`;
+
+  let bodyContent;
+  if (q.research_required === 'Y' && q.research_topic) {
+    bodyContent = `
+      <div class="research-flag">
+        <div class="research-flag-title">🔍 Worth digging into</div>
+        <div class="research-flag-topic">${q.research_topic}</div>
+        <div class="research-flag-note">Added to your research list for research time.</div>
+      </div>
+    `;
+  } else {
+    bodyContent = `<div class="lesson">${q.lesson || ''}</div>`;
+  }
+
+  return `
+    <div class="card-tag">Answer: ${q.answer}</div>
+    ${resultLabel}
+    ${bodyContent}
+    <button class="next-btn" id="next-btn">Next</button>
+  `;
+}
+
+// ---------- Research prompt ----------
+function renderResearchPrompt(skippedPractice) {
+  root.innerHTML = `
+    <div class="research-prompt">
+      <h2>Any research questions you want to note down for your research time?</h2>
+      <textarea id="research-text" placeholder="Type it here... or leave blank if nothing today"></textarea>
+      <div class="research-actions">
+        <button id="research-skip" class="secondary-btn">Skip</button>
+        <button id="research-save" class="primary-btn">Save</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('research-skip').onclick = renderDone;
+  document.getElementById('research-save').onclick = async () => {
+    const text = document.getElementById('research-text').value.trim();
+    if (text) {
+      await apiPost('addResearch', { source: 'kid_prompt', topic: text });
+    }
+    renderDone();
+  };
+}
+
+// ---------- Done screen ----------
+function renderDone() {
+  root.innerHTML = `
+    <div class="done-screen">
+      <div class="done-emoji">🎉</div>
+      <h2>All done for today!</h2>
+      <p>See you next time.</p>
+    </div>
+  `;
+}
+
+// ---------- Boot ----------
+renderLanding();
+
+</script>
+</body>
+</html>
